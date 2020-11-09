@@ -30,19 +30,19 @@ public class CartController {
 	UserService userService;
 
 	@PostMapping(path = "/cart")
-	public ResponseEntity<?> processTransaction(@RequestBody Cart cart, @RequestParam long id) {
+	public String processTransaction(@RequestBody Cart cart, @RequestParam long id) {
 		System.out.println("Processing Transaction");
 		if (id > 0) {
 			cart.setPurchasedBy(id);
 			Optional<User> _u = userService.getUserById(id);
 			if (_u.isPresent()) {
 				cartService.processTransaction(cart);
-				return new ResponseEntity<>("transaction completed successfully", HttpStatus.OK);
+				return "transaction completed successfully";
 			} else {
-				return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+				return "User not found";
 			}
 		}
-		return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
+		return "User not found";
 	}
 
 	@GetMapping(path = "/cart/{userId}")
